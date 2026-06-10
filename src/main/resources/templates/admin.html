@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Admin Dashboard</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/admin">Admin Dashboard</a><div class="nav"><a href="/admin/products">Products</a><a href="/admin/stock">Stock</a><a href="/admin/orders">Orders</a><form method="post" action="/logout"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button>Logout</button></form></div></nav>
+<main class="container">
+    <h1>Admin Dashboard</h1>
+    <section class="metrics">
+        <div class="metric"><span>Total Products</span><strong th:text="${metrics.totalProducts}">0</strong></div>
+        <div class="metric"><span>Active Products</span><strong th:text="${metrics.activeProducts}">0</strong></div>
+        <div class="metric"><span>Total Orders</span><strong th:text="${metrics.totalOrders}">0</strong></div>
+        <div class="metric"><span>Pending Orders</span><strong th:text="${metrics.pendingOrders}">0</strong></div>
+        <div class="metric"><span>Low Stock</span><strong th:text="${metrics.lowStock}">0</strong></div>
+    </section>
+    <h2>Recent Orders</h2>
+    <table><thead><tr><th>Order</th><th>Status</th><th>Total</th></tr></thead><tbody><tr th:each="order : ${orders}"><td th:text="${order.orderNumber}">Order</td><td th:text="${order.status}">Status</td><td th:text="${'$' + order.totalPrice}">Total</td></tr></tbody></table>
+</main>
+</body>
+</html>

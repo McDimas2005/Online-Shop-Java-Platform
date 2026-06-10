@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Products</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/">Online Shop Java Platform</a><div class="nav"><a href="/dashboard">Dashboard</a><a href="/cart">Cart</a><a href="/legacy-console">Original CLI Mode</a></div></nav>
+<main class="container">
+    <h1>Product Catalog</h1>
+    <form class="panel grid" method="get" action="/products">
+        <label>Search <input name="q" placeholder="Product name or code"></label>
+        <label>Category <select name="category"><option value="">All</option><option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option></select></label>
+        <label>Brand <input name="brand" placeholder="Electronics brand"></label>
+        <label>Size <input name="size" placeholder="Clothing size"></label>
+        <label>Available <select name="availableOnly"><option value="">Any</option><option value="true">In stock only</option></select></label>
+        <button class="btn primary" type="submit">Filter</button>
+    </form>
+    <section class="grid" style="margin-top:16px">
+        <article class="card" th:each="product : ${products}">
+            <h3><a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.productName}">Product</a></h3>
+            <p><span class="badge" th:text="${product.category()}">Category</span> <span class="badge warn" th:text="${product.available ? 'In Stock' : 'Unavailable'}">Stock</span></p>
+            <p><strong th:text="${'$' + product.price}">$0.00</strong></p>
+            <p th:text="'Stock: ' + ${product.quantityInStock}">Stock</p>
+            <form method="post" action="/cart/items">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <input type="hidden" name="productId" th:value="${product.id}">
+                <input type="hidden" name="quantity" value="1">
+                <button class="btn primary" type="submit" th:disabled="${!product.available}">Add to Cart</button>
+            </form>
+        </article>
+    </section>
+</main>
+</body>
+</html>

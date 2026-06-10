@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Orders</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/dashboard">Customer Dashboard</a><div class="nav"><a href="/products">Catalog</a><a href="/cart">Cart</a></div></nav>
+<main class="container">
+    <h1>Order History</h1>
+    <table>
+        <thead><tr><th>Order</th><th>Date</th><th>Status</th><th>Total</th><th></th></tr></thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(orders)}"><td colspan="5">No order history yet.</td></tr>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.orderNumber}">Order</td>
+            <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">Date</td>
+            <td><span class="badge" th:text="${order.status}">Status</span></td>
+            <td th:text="${'$' + order.totalPrice}">Total</td>
+            <td><a class="btn" th:href="@{/orders/{id}(id=${order.id})}">Details</a> <a class="btn primary" th:href="@{/orders/{id}/tracking(id=${order.id})}">Track</a></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

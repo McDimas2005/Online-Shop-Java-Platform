@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title th:text="${product.productName}">Product</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/products">Catalog</a><div class="nav"><a href="/cart">Cart</a></div></nav>
+<main class="container split">
+    <section class="panel">
+        <h1 th:text="${product.productName}">Product</h1>
+        <p><span class="badge" th:text="${product.category()}">Category</span></p>
+        <p><strong th:text="${'$' + product.price}">$0.00</strong></p>
+        <p th:text="'Product ID: ' + ${product.productCode}">Product ID</p>
+        <p th:text="'Stock quantity: ' + ${product.quantityInStock}">Stock</p>
+        <p th:if="${product.category().name() == 'CLOTHING'}" th:text="'Size: ' + ${product.size}">Size</p>
+        <p th:if="${product.category().name() == 'ELECTRONICS'}" th:text="'Brand: ' + ${product.brand}">Brand</p>
+        <p th:if="${product.category().name() == 'ELECTRONICS'}" th:text="'Warranty: ' + ${product.warrantyPeriodYears} + ' years'">Warranty</p>
+    </section>
+    <aside class="panel">
+        <h2>Add to Cart</h2>
+        <form class="stack" method="post" action="/cart/items">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" name="productId" th:value="${product.id}">
+            <label>Quantity <input name="quantity" type="number" min="1" value="1"></label>
+            <button class="btn primary" type="submit" th:disabled="${!product.available}">Add</button>
+        </form>
+    </aside>
+</main>
+</body>
+</html>

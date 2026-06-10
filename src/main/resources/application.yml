@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: online-shop-java-platform
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/online_shop}
+    username: ${DB_USERNAME:online_shop}
+    password: ${DB_PASSWORD:online_shop}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  thymeleaf:
+    cache: false
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  demo:
+    admin-password: ${DEMO_ADMIN_PASSWORD:admin12345}
+    customer-password: ${DEMO_CUSTOMER_PASSWORD:customer12345}
+  tracking:
+    delay-ms: ${TRACKING_DELAY_MS:1200}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:onlineshop;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+app:
+  tracking:
+    delay-ms: 10

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Order Detail</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/orders">Orders</a><div class="nav"><a th:href="@{/orders/{id}/tracking(id=${order.id})}">Live Tracking</a></div></nav>
+<main class="container">
+    <section class="panel">
+        <h1 th:text="${order.orderNumber}">Order</h1>
+        <p><span class="badge" th:text="${order.status}">Status</span></p>
+        <p th:text="${'Total: $' + order.totalPrice}">Total</p>
+        <div class="progress"><span th:style="'width:' + ${order.progressPercent} + '%'"></span></div>
+    </section>
+    <h2>Items</h2>
+    <table>
+        <thead><tr><th>Product</th><th>Category</th><th>Unit Price</th><th>Quantity</th><th>Subtotal</th></tr></thead>
+        <tbody><tr th:each="item : ${order.items}"><td th:text="${item.productName}">Name</td><td th:text="${item.category}">Category</td><td th:text="${'$' + item.unitPrice}">Unit</td><td th:text="${item.quantity}">Qty</td><td th:text="${'$' + item.subtotal}">Subtotal</td></tr></tbody>
+    </table>
+    <h2>Tracking Events</h2>
+    <div class="panel"><p th:each="event : ${events}" th:text="${event.status + ' - ' + event.progressPercent + '% - ' + event.message}">Event</p></div>
+</main>
+</body>
+</html>

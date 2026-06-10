@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Admin Orders</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/admin">Admin</a><div class="nav"><a href="/admin/products">Products</a><a href="/admin/stock">Stock</a></div></nav>
+<main class="container">
+    <h1>Order Monitoring</h1>
+    <table><thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Progress</th><th>Total</th></tr></thead><tbody><tr th:each="order : ${orders}"><td th:text="${order.orderNumber}">Order</td><td th:text="${order.customer.user.name}">Customer</td><td th:text="${order.status}">Status</td><td th:text="${order.progressPercent + '%'}">Progress</td><td th:text="${'$' + order.totalPrice}">Total</td></tr></tbody></table>
+</main>
+</body>
+</html>

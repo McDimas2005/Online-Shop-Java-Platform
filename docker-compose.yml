@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-online_shop}
+      POSTGRES_USER: ${DB_USERNAME:-online_shop}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-online_shop}
+    ports:
+      - "5432:5432"
+    volumes:
+      - online_shop_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-online_shop} -d ${DB_NAME:-online_shop}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-online_shop}
+      DB_USERNAME: ${DB_USERNAME:-online_shop}
+      DB_PASSWORD: ${DB_PASSWORD:-online_shop}
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+
+volumes:
+  online_shop_postgres:

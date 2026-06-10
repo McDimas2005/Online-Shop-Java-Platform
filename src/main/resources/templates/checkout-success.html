@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Order Success</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/dashboard">Customer Dashboard</a><div class="nav"><a href="/orders">Orders</a><a href="/products">Catalog</a></div></nav>
+<main class="container panel">
+    <h1>Order Accepted</h1>
+    <p>Your order has been created and the asynchronous tracking workflow has started.</p>
+    <p><strong th:text="${order.orderNumber}">Order</strong></p>
+    <p th:text="${'Total: $' + order.totalPrice}">Total</p>
+    <a class="btn primary" th:href="@{/orders/{id}/tracking(id=${order.id})}">Track Order</a>
+</main>
+</body>
+</html>

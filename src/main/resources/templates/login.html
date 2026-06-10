@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Login</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/">Online Shop Java Platform</a><div class="nav"><a href="/register">Register</a></div></nav>
+<main class="container split">
+    <section class="panel">
+        <h1>Login</h1>
+        <p class="muted" th:if="${param.registered}">Account created. Sign in with your email and password.</p>
+        <p class="muted" th:if="${param.error}">Invalid credentials.</p>
+        <form class="stack" method="post" action="/login">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <label>Email <input name="email" type="email" required></label>
+            <label>Password <input name="password" type="password" required></label>
+            <button class="btn primary" type="submit">Sign In</button>
+        </form>
+    </section>
+    <aside class="panel">
+        <h2>Demo Accounts</h2>
+        <p><strong>Admin:</strong> GreatGenshin@mihoyo.com / admin12345</p>
+        <p><strong>Customer:</strong> loveVanitas@carte.com / customer12345</p>
+    </aside>
+</main>
+</body>
+</html>

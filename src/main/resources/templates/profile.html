@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Profile</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/dashboard">Customer Dashboard</a><div class="nav"><a href="/orders">Orders</a></div></nav>
+<main class="container split">
+    <section class="panel">
+        <h1>Customer Profile</h1>
+        <p th:text="${'Customer ID: ' + profile.user.userCode}">ID</p>
+        <p th:text="${'Name: ' + profile.user.name}">Name</p>
+        <p th:text="${'Delivery distance: ' + profile.deliveryDistanceKm + ' KM'}">Distance</p>
+    </section>
+    <aside class="panel">
+        <h2>Update Contact</h2>
+        <form class="stack" method="post" action="/profile">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <label>Email <input name="email" type="email" th:value="${profile.user.email}" required></label>
+            <label>Address <input name="address" th:value="${profile.address}" required></label>
+            <button class="btn primary" type="submit">Save</button>
+        </form>
+    </aside>
+</main>
+</body>
+</html>

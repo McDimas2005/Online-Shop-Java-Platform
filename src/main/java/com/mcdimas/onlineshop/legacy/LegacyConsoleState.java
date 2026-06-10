@@ -1,0 +1,21 @@
+package com.mcdimas.onlineshop.legacy;
+
+public enum LegacyConsoleState {
+    LOGIN_MENU,
+    LOGIN_ID,
+    SIGNUP_NAME,
+    SIGNUP_EMAIL,
+    SIGNUP_ADDRESS,
+    MAIN_MENU,
+    USER_PRODUCTS_MENU,
+    ADMIN_PRODUCTS_MENU,
+    CART_MENU,
+    ORDERS_MENU,
+    ADD_PRODUCT_ID,
+    ADD_STOCK_KIND,
+    RESTOCK_ID,
+    RESTOCK_QUANTITY,
+    CHECKOUT_CONFIRM,
+    TRACK_ORDER_ID,
+    TRACK_REFRESH
+}

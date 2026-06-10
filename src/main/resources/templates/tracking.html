@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Live Tracking</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/orders">Orders</a><div class="nav"><a href="/dashboard">Dashboard</a></div></nav>
+<main class="container split">
+    <section class="panel">
+        <h1 th:text="${order.orderNumber}">Order</h1>
+        <p>Current status: <span id="status" class="badge" th:text="${order.status}">Status</span></p>
+        <div class="progress"><span id="progressBar" th:style="'width:' + ${order.progressPercent} + '%'"></span></div>
+        <p id="progressText" th:text="${order.progressPercent + '% complete'}">0%</p>
+        <p th:text="${'Simulated distance: ' + order.distanceKm + ' KM'}">Distance</p>
+    </section>
+    <aside class="panel">
+        <h2>Tracking Events</h2>
+        <div id="events">
+            <p th:each="event : ${events}" th:text="${event.status + ' - ' + event.progressPercent + '% - ' + event.message}">Event</p>
+        </div>
+    </aside>
+</main>
+<script th:inline="javascript">
+const orderId = [[${order.id}]];
+</script>
+<script src="/js/tracking.js"></script>
+</body>
+</html>

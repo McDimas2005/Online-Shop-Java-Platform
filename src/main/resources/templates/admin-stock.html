@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Stock Overview</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/admin">Admin</a><div class="nav"><a href="/admin/products">Products</a></div></nav>
+<main class="container">
+    <h1>Stock Overview</h1>
+    <section class="split">
+        <div><h2>Low Stock</h2><table><thead><tr><th>ID</th><th>Name</th><th>Stock</th><th>Restock</th></tr></thead><tbody><tr th:each="product : ${lowStock}"><td th:text="${product.productCode}">ID</td><td th:text="${product.productName}">Name</td><td th:text="${product.quantityInStock}">Stock</td><td><form class="inline" method="post" th:action="@{/admin/products/{id}/restock(id=${product.id})}"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><input name="quantity" type="number" min="1" value="10" style="width:90px"><button class="btn">Restock</button></form></td></tr></tbody></table></div>
+        <div><h2>Out of Stock or Inactive</h2><table><thead><tr><th>ID</th><th>Name</th><th>Stock</th><th>Restock</th></tr></thead><tbody><tr th:each="product : ${outOfStock}"><td th:text="${product.productCode}">ID</td><td th:text="${product.productName}">Name</td><td th:text="${product.quantityInStock}">Stock</td><td><form class="inline" method="post" th:action="@{/admin/products/{id}/restock(id=${product.id})}"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><input name="quantity" type="number" min="1" value="20" style="width:90px"><button class="btn">Restock</button></form></td></tr></tbody></table></div>
+    </section>
+</main>
+</body>
+</html>
