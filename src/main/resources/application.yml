@@ -20,8 +20,8 @@ server:
 
 app:
   demo:
-    admin-password: ${DEMO_ADMIN_PASSWORD:admin12345}
-    customer-password: ${DEMO_CUSTOMER_PASSWORD:customer12345}
+    admin-password: ${DEMO_ADMIN_PASSWORD:admin123}
+    customer-password: ${DEMO_CUSTOMER_PASSWORD:customer123}
   tracking:
     delay-ms: ${TRACKING_DELAY_MS:1200}
 

@@ -124,7 +124,8 @@ Pages:
 - `/`
 - `/login`
 - `/register`
-- `/dashboard`
+- `/dashboard` role router
+- `/customer/dashboard`
 - `/products`
 - `/products/{id}`
 - `/cart`
@@ -133,7 +134,8 @@ Pages:
 - `/orders/{id}`
 - `/orders/{id}/tracking`
 - `/profile`
-- `/admin`
+- `/admin` redirects to `/admin/dashboard`
+- `/admin/dashboard`
 - `/admin/products`
 - `/admin/stock`
 - `/admin/orders`
@@ -211,8 +213,13 @@ The app will be available at `http://localhost:8080`.
 
 For local development only:
 
-- Admin: `GreatGenshin@mihoyo.com` / `admin12345`
-- Customer: `loveVanitas@carte.com` / `customer12345`
+- Admin: `admin@onlineshop.local` / `admin123`
+- Customer: `customer@onlineshop.local` / `customer123`
+
+The seeded accounts preserve the original prototype identity:
+
+- `AD000` Tsukishima Alan is the admin demo account.
+- `CU001` Jeanne Fortes is the customer demo account.
 
 Passwords are hashed with BCrypt in the database.
 
@@ -238,6 +245,59 @@ Covered scenarios include:
 - order tracking events
 - customer/admin page access
 - CLI simulation login, invalid input, and reset
+
+## Working Flow Checklist
+
+Customer:
+
+- Open `/`, register, log in, and land on `/customer/dashboard`.
+- Browse `/products`, open a product detail page, and add an item to the cart.
+- Update and remove cart items from `/cart`.
+- Checkout from `/cart`; stock is deducted and the cart clears.
+- View `/orders`, open an order detail page, and track it live.
+- Update contact details from `/profile`.
+- Logout from the customer dashboard.
+
+Admin:
+
+- Log in with the admin demo account and land on `/admin/dashboard`.
+- Open `/admin/products`, add clothing/electronics, edit products, and deactivate products.
+- Open `/admin/stock`, view low/out-of-stock products, and restock them.
+- Open `/admin/orders` to monitor order status.
+- Logout from the admin dashboard.
+
+Original CLI Mode:
+
+- Open `/legacy-console`.
+- Use menu numbers for the original Java console flow.
+- Use `help` to show terminal commands.
+- Use `clear` or `cls` to clear visible output.
+- Use `reset` or the Reset button to restart the simulated session.
+
+## Troubleshooting 403 Forbidden
+
+A 403 usually means the user is authenticated but does not have the role required by the route, or the route matcher is wrong.
+
+Current expected behavior:
+
+- Unauthenticated `/dashboard` redirects to `/login`.
+- Admin `/dashboard` redirects to `/admin/dashboard`.
+- Customer `/dashboard` redirects to `/customer/dashboard`.
+- Admin-only pages require `ROLE_ADMIN`.
+- Customer-only pages require `ROLE_CUSTOMER`.
+
+Correct local demo credentials:
+
+- Admin: `admin@onlineshop.local` / `admin123`
+- Customer: `customer@onlineshop.local` / `customer123`
+
+If old seed data is still present, restart the app once. The seeder repairs the demo users by `AD000` and `CU001`. If the database has conflicting manually-created demo emails, reset the local database volume:
+
+```bash
+docker compose down -v
+docker compose up -d postgres
+mvn spring-boot:run
+```
 
 ## Screenshots
 

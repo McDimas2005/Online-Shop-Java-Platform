@@ -9,6 +9,7 @@ import com.mcdimas.onlineshop.entity.UserAccount;
 import com.mcdimas.onlineshop.repository.ProductRepository;
 import com.mcdimas.onlineshop.repository.UserAccountRepository;
 import java.math.BigDecimal;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,20 +44,36 @@ public class DemoDataSeeder implements CommandLineRunner {
     }
 
     private void seedUsers() {
-        if (!userRepository.existsByUserCode("AD000")) {
-            UserAccount admin = new UserAccount("AD000", "Tsukishima Alan", "GreatGenshin@mihoyo.com",
-                    passwordEncoder.encode(adminPassword), Role.ADMIN);
-            userRepository.save(admin);
-        }
-        if (!userRepository.existsByUserCode("CU001")) {
-            UserAccount customer = new UserAccount("CU001", "Jeanne Fortes", "loveVanitas@carte.com",
-                    passwordEncoder.encode(customerPassword), Role.CUSTOMER);
-            CustomerProfile profile = new CustomerProfile(customer, "Somewhere Paris", 6);
+        ensureDemoUser("AD000", "Tsukishima Alan", "admin@onlineshop.local", adminPassword,
+                Role.ADMIN, null, 4);
+        ensureDemoUser("CU001", "Jeanne Fortes", "customer@onlineshop.local", customerPassword,
+                Role.CUSTOMER, "Somewhere Paris", 6);
+    }
+
+    private void ensureDemoUser(String userCode, String name, String email, String password,
+                                Role role, String address, int distanceKm) {
+        Optional<UserAccount> byCode = userRepository.findByUserCode(userCode);
+        Optional<UserAccount> byEmail = userRepository.findByEmailIgnoreCase(email);
+        UserAccount user = byCode.or(() -> byEmail)
+                .orElseGet(() -> new UserAccount(userCode, name, email, "", role));
+
+        user.setUserCode(userCode);
+        user.setName(name);
+        user.setEmail(email);
+        user.setRole(role);
+        user.setPasswordHash(passwordEncoder.encode(password));
+
+        if (role == Role.CUSTOMER && user.getCustomerProfile() == null) {
+            CustomerProfile profile = new CustomerProfile(user, address, distanceKm);
             Cart cart = new Cart(profile);
             profile.setCart(cart);
-            customer.setCustomerProfile(profile);
-            userRepository.save(customer);
+            user.setCustomerProfile(profile);
+        } else if (role == Role.CUSTOMER) {
+            user.getCustomerProfile().setAddress(address);
+            user.getCustomerProfile().setDeliveryDistanceKm(distanceKm);
         }
+
+        userRepository.save(user);
     }
 
     private void seedProducts() {

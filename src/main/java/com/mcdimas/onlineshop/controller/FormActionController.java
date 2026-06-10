@@ -65,6 +65,12 @@ public class FormActionController {
         return "redirect:/admin/stock";
     }
 
+    @PostMapping("/admin/products/{id}/edit")
+    public String updateProduct(@PathVariable Long id, @Valid ProductForm form) {
+        productService.update(id, form);
+        return "redirect:/admin/products";
+    }
+
     @PostMapping("/admin/products/{id}/deactivate")
     public String deactivate(@PathVariable Long id) {
         productService.deactivate(id);

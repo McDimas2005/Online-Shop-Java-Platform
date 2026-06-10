@@ -38,4 +38,16 @@ class LegacyConsoleSessionTest {
         assertThat(result.state()).isEqualTo(LegacyConsoleState.LOGIN_MENU);
         assertThat(result.output()).contains("Log In", "Sign Up");
     }
+
+    @Test
+    void helpAndClearCommandsAreHandledWithoutShellAccess() {
+        LegacyConsoleSession session = new LegacyConsoleSession("test");
+
+        assertThat(session.submit("help").output()).contains("Available commands", "Menu numbers");
+        LegacyCommandResult clear = session.submit("clear");
+
+        assertThat(clear.clearScreen()).isTrue();
+        assertThat(clear.output()).isEmpty();
+        assertThat(clear.state()).isEqualTo(LegacyConsoleState.LOGIN_MENU);
+    }
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Admin Dashboard</title><link rel="stylesheet" href="/css/app.css"></head>
 <body>
-<nav class="topbar"><a class="brand" href="/admin">Admin Dashboard</a><div class="nav"><a href="/admin/products">Products</a><a href="/admin/stock">Stock</a><a href="/admin/orders">Orders</a><form method="post" action="/logout"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button>Logout</button></form></div></nav>
+<nav class="topbar"><a class="brand" href="/admin/dashboard">Admin Dashboard</a><div class="nav"><a href="/admin/products">Products</a><a href="/admin/stock">Stock</a><a href="/admin/orders">Orders</a><form method="post" action="/logout"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button>Logout</button></form></div></nav>
 <main class="container">
     <h1>Admin Dashboard</h1>
     <section class="metrics">

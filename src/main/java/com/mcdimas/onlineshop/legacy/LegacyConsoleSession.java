@@ -51,6 +51,12 @@ public class LegacyConsoleSession {
     public LegacyCommandResult submit(String rawInput) {
         lastTouched = Instant.now();
         String input = rawInput == null ? "" : rawInput.trim();
+        if ("clear".equalsIgnoreCase(input) || "cls".equalsIgnoreCase(input)) {
+            return new LegacyCommandResult(id, "", state, true);
+        }
+        if ("help".equalsIgnoreCase(input)) {
+            return new LegacyCommandResult(id, help(), state);
+        }
         String output = switch (state) {
             case LOGIN_MENU -> handleLoginMenu(input);
             case LOGIN_ID -> handleLogin(input);
@@ -308,6 +314,18 @@ public class LegacyConsoleSession {
 
     private String title() {
         return "=== Online Shopping Platform ===\n";
+    }
+
+    private String help() {
+        return """
+                Available commands:
+                help  - show this help
+                clear - clear visible terminal output
+                cls   - clear visible terminal output
+                reset - use the Reset button or reset action to restart the session
+
+                Menu numbers still follow the original Java console prototype flow.
+                """;
     }
 
     private String mainMenu() {

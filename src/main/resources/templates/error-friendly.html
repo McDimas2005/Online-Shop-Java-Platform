@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title th:text="${status + ' - ' + title}">Error</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<nav class="topbar"><a class="brand" href="/">Online Shop Java Platform</a><div class="nav"><a href="/dashboard">Dashboard</a><a href="/products">Catalog</a><a href="/legacy-console">Original CLI Mode</a></div></nav>
+<main class="container panel">
+    <p class="badge warn" th:text="${status}">403</p>
+    <h1 th:text="${title}">Access denied</h1>
+    <p th:text="${message}">You cannot access this page.</p>
+    <div class="nav">
+        <a class="btn primary" href="/dashboard">Go to Dashboard</a>
+        <a class="btn" href="/">Home</a>
+        <a class="btn" href="/login">Login</a>
+    </div>
+</main>
+</body>
+</html>

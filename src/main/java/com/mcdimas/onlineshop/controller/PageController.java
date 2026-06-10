@@ -64,12 +64,18 @@ public class PageController {
     public String dashboard(Principal principal, Model model) {
         var user = accountService.byEmail(principal.getName());
         if (user.getRole() == Role.ADMIN) {
-            return "redirect:/admin";
+            return "redirect:/admin/dashboard";
         }
+        return "redirect:/customer/dashboard";
+    }
+
+    @GetMapping("/customer/dashboard")
+    public String customerDashboard(Principal principal, Model model) {
+        var user = accountService.byEmail(principal.getName());
         model.addAttribute("user", user);
         model.addAttribute("orders", orderService.customerOrders(principal.getName()).stream().limit(5).toList());
         model.addAttribute("products", productService.search(null, null, null, null, true).stream().limit(4).toList());
-        return "dashboard";
+        return "customer-dashboard";
     }
 
     @GetMapping("/products")
@@ -135,10 +141,15 @@ public class PageController {
     }
 
     @GetMapping("/admin")
+    public String adminRoot() {
+        return "redirect:/admin/dashboard";
+    }
+
+    @GetMapping("/admin/dashboard")
     public String admin(Model model) {
         model.addAttribute("metrics", dashboardService.metrics());
         model.addAttribute("orders", orderService.allOrders().stream().limit(10).toList());
-        return "admin";
+        return "admin-dashboard";
     }
 
     @GetMapping("/admin/products")
@@ -146,6 +157,26 @@ public class PageController {
         model.addAttribute("products", productService.search(null, null, null, null, null));
         model.addAttribute("productForm", new ProductForm());
         return "admin-products";
+    }
+
+    @GetMapping("/admin/products/{id}/edit")
+    public String editProduct(@PathVariable Long id, Model model) {
+        var product = productService.get(id);
+        ProductForm form = new ProductForm();
+        form.setProductCode(product.getProductCode());
+        form.setProductName(product.getProductName());
+        form.setPrice(product.getPrice());
+        form.setQuantityInStock(product.getQuantityInStock());
+        if (product instanceof com.mcdimas.onlineshop.entity.ClothingProduct clothing) {
+            form.setSize(clothing.getSize());
+        }
+        if (product instanceof com.mcdimas.onlineshop.entity.ElectronicsProduct electronics) {
+            form.setBrand(electronics.getBrand());
+            form.setWarrantyPeriodYears(electronics.getWarrantyPeriodYears());
+        }
+        model.addAttribute("product", product);
+        model.addAttribute("productForm", form);
+        return "admin-product-edit";
     }
 
     @GetMapping("/admin/stock")

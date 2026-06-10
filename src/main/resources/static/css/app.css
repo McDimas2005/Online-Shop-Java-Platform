@@ -226,7 +226,8 @@ form.stack {
 }
 
 .terminal {
-  min-height: 520px;
+  height: 520px;
+  max-height: 60vh;
   background: #101820;
   color: #d1fae5;
   border-radius: 8px;
@@ -239,7 +240,7 @@ form.stack {
 
 .terminal-input {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
   gap: 8px;
   margin-top: 10px;
 }
