@@ -8,10 +8,19 @@ const statusEl = document.getElementById("sessionStatus");
 let sessionId = null;
 let stream = null;
 let processing = false;
+const MAX_TERMINAL_LINES = 800;
 
 function print(text) {
   terminal.textContent += text + "\n";
+  trimTerminal();
   terminal.scrollTop = terminal.scrollHeight;
+}
+
+function trimTerminal() {
+  const lines = terminal.textContent.split("\n");
+  if (lines.length > MAX_TERMINAL_LINES) {
+    terminal.textContent = lines.slice(lines.length - MAX_TERMINAL_LINES).join("\n");
+  }
 }
 
 function setProcessing(value) {

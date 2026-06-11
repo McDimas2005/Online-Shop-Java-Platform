@@ -140,6 +140,24 @@ Pages:
 - `/admin/stock`
 - `/admin/orders`
 - `/legacy-console`
+- `/health`
+
+Quick deployment route checklist:
+
+```text
+/
+/login
+/dashboard
+/admin/dashboard
+/customer/dashboard
+/products
+/cart
+/checkout
+/orders
+/profile
+/legacy-console
+/health
+```
 
 APIs:
 
@@ -208,6 +226,92 @@ docker compose up --build
 ```
 
 The app will be available at `http://localhost:8080`.
+
+## Deployment: Render + Neon
+
+Target architecture:
+
+```text
+GitHub repository -> Render Docker Web Service -> Spring Boot app -> Neon PostgreSQL
+```
+
+This deployment path uses no paid service dependency. Render Free web services can sleep after inactivity, so the first request after a quiet period may take about one minute while the service wakes up.
+
+### Create Neon PostgreSQL
+
+1. Create a free Neon project.
+2. Create or select a database.
+3. Copy the host, database name, username, and password.
+4. Convert the Neon connection string to a JDBC URL:
+
+```text
+jdbc:postgresql://YOUR_NEON_HOST/YOUR_DATABASE?sslmode=require
+```
+
+`sslmode=require` is important for Neon.
+
+### Create Render Web Service
+
+1. Push this repository to GitHub.
+2. In Render, create a new Web Service.
+3. Connect the GitHub repository.
+4. Choose Docker as the runtime.
+5. Keep the root-level `Dockerfile`.
+6. Add the environment variables below.
+7. Deploy.
+
+Required Render environment variables:
+
+```env
+SPRING_PROFILES_ACTIVE=prod
+SPRING_DATASOURCE_URL=jdbc:postgresql://YOUR_NEON_HOST/YOUR_DATABASE?sslmode=require
+SPRING_DATASOURCE_USERNAME=YOUR_NEON_USERNAME
+SPRING_DATASOURCE_PASSWORD=YOUR_NEON_PASSWORD
+JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75.0
+```
+
+Optional environment variables:
+
+```env
+APP_SEED_DEMO_DATA=true
+APP_BASE_URL=https://YOUR-RENDER-SERVICE.onrender.com
+```
+
+Render provides `PORT` automatically. The production profile reads it with `${PORT:8080}`.
+
+### Verify Deployment
+
+1. Open the Render URL.
+2. Visit `/health`; it should return `OK`.
+3. Visit `/login`.
+4. Login as admin: `admin@onlineshop.local` / `admin123`.
+5. Confirm `/dashboard` redirects to `/admin/dashboard`.
+6. Logout.
+7. Login as customer: `customer@onlineshop.local` / `customer123`.
+8. Confirm `/dashboard` redirects to `/customer/dashboard`.
+9. Browse `/products`, add to cart, checkout, and track the order.
+10. Open `/legacy-console`, run `help`, `clear`, `reset`, and menu-number commands.
+
+### Docker Commands
+
+Build locally:
+
+```bash
+docker build -t online-shop-java-platform .
+```
+
+Run locally against Neon:
+
+```bash
+docker run --rm -p 8080:8080 \
+  -e SPRING_PROFILES_ACTIVE=prod \
+  -e SPRING_DATASOURCE_URL="jdbc:postgresql://YOUR_NEON_HOST/YOUR_DATABASE?sslmode=require" \
+  -e SPRING_DATASOURCE_USERNAME="YOUR_NEON_USERNAME" \
+  -e SPRING_DATASOURCE_PASSWORD="YOUR_NEON_PASSWORD" \
+  online-shop-java-platform
+```
+
+Render uses the same Dockerfile.
 
 ## Demo Accounts
 
@@ -298,6 +402,78 @@ docker compose down -v
 docker compose up -d postgres
 mvn spring-boot:run
 ```
+
+## Deployment Troubleshooting
+
+### Build fails with `release version 21 not supported`
+
+Cause: Java/JDK mismatch, or a runtime-only Java install without a compatible compiler.
+
+Fix:
+
+- Use the provided Dockerfile, which builds with `maven:3.9.9-eclipse-temurin-21`.
+- Locally, install a full JDK 21+ and confirm `javac -version` works.
+- Run `mvn clean test` again after fixing the JDK.
+
+### App crashes with database connection errors
+
+Check:
+
+- `SPRING_PROFILES_ACTIVE=prod`
+- `SPRING_DATASOURCE_URL`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- Neon JDBC URL includes `?sslmode=require`
+
+No Neon credentials should be committed to Git.
+
+### App starts but login fails
+
+Check:
+
+- Demo seeding is enabled with `APP_SEED_DEMO_DATA=true`.
+- Demo credentials are exactly:
+  - `admin@onlineshop.local` / `admin123`
+  - `customer@onlineshop.local` / `customer123`
+- The database has roles `ADMIN` and `CUSTOMER`.
+- Password values in the database are BCrypt hashes, not plain text.
+
+### `/dashboard` returns 403
+
+Expected behavior:
+
+- Unauthenticated `/dashboard` redirects to `/login`.
+- Admin `/dashboard` redirects to `/admin/dashboard`.
+- Customer `/dashboard` redirects to `/customer/dashboard`.
+
+If this fails, check:
+
+- The user has role value `ADMIN` or `CUSTOMER`.
+- Spring Security maps roles to `ROLE_ADMIN` and `ROLE_CUSTOMER`.
+- `SecurityConfig` keeps `/dashboard` as authenticated-only and role-routes in the controller.
+
+### Static assets are not loading
+
+Check:
+
+- CSS is under `/css/**`.
+- JavaScript is under `/js/**`.
+- Templates use app-relative paths, not `localhost`.
+- Render deployed the Docker image from the repository root.
+
+### Original CLI Mode output grows too long
+
+The terminal has fixed height and internal scrolling. Use:
+
+- `clear` or `cls` to clear visible output.
+- `reset` to restart the session.
+- `help` for command guidance.
+
+The browser terminal history is capped to avoid unbounded client memory growth.
+
+### Render first load is slow
+
+Render Free services can sleep after inactivity. A slow first load is normal for a no-cost portfolio deployment.
 
 ## Screenshots
 

@@ -1,0 +1,33 @@
+server:
+  port: ${PORT:8080}
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+  thymeleaf:
+    cache: true
+  web:
+    resources:
+      cache:
+        period: 3600
+
+logging:
+  level:
+    org.springframework.security: INFO
+    org.hibernate.SQL: INFO
+
+app:
+  seed-demo-data: ${APP_SEED_DEMO_DATA:true}
+  base-url: ${APP_BASE_URL:}

@@ -22,9 +22,9 @@ public class SecurityConfig {
                                                    AuthenticationSuccessHandler authenticationSuccessHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/register", "/error", "/403", "/404", "/500",
+                        .requestMatchers("/", "/health", "/login", "/register", "/error", "/403", "/404", "/500",
                                 "/css/**", "/js/**", "/images/**", "/webjars/**",
-                                "/api/auth/me", "/api/products/**",
+                                "/api/auth/me", "/api/products/**", "/products", "/products/**",
                                 "/legacy-console", "/legacy-console/**", "/api/legacy-console/**", "/sse/legacy-console/**").permitAll()
                         .requestMatchers("/dashboard").authenticated()
                         .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")

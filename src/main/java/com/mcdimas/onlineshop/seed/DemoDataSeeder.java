@@ -23,22 +23,28 @@ public class DemoDataSeeder implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final String adminPassword;
     private final String customerPassword;
+    private final boolean seedDemoData;
 
     public DemoDataSeeder(UserAccountRepository userRepository,
                           ProductRepository productRepository,
                           PasswordEncoder passwordEncoder,
                           @Value("${app.demo.admin-password}") String adminPassword,
-                          @Value("${app.demo.customer-password}") String customerPassword) {
+                          @Value("${app.demo.customer-password}") String customerPassword,
+                          @Value("${app.seed-demo-data:true}") boolean seedDemoData) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.passwordEncoder = passwordEncoder;
         this.adminPassword = adminPassword;
         this.customerPassword = customerPassword;
+        this.seedDemoData = seedDemoData;
     }
 
     @Override
     @Transactional
     public void run(String... args) {
+        if (!seedDemoData) {
+            return;
+        }
         seedUsers();
         seedProducts();
     }

@@ -37,6 +37,8 @@ class SecurityAndPageControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/legacy-console"))
                 .andExpect(status().isOk());
+        mockMvc.perform(get("/health"))
+                .andExpect(status().isOk());
     }
 
     @Test

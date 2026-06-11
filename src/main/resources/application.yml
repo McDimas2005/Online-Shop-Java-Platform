@@ -19,6 +19,8 @@ server:
   port: ${SERVER_PORT:8080}
 
 app:
+  seed-demo-data: ${APP_SEED_DEMO_DATA:true}
+  base-url: ${APP_BASE_URL:}
   demo:
     admin-password: ${DEMO_ADMIN_PASSWORD:admin123}
     customer-password: ${DEMO_CUSTOMER_PASSWORD:customer123}
